@@ -83,7 +83,7 @@ Section compose_functors.
   Hint Extern 4 => rewrite preserves_id.
   Hint Extern 4 => rewrite preserves_comp.
   Ltac hyp_rewrite := match goal with
-                        | [ H : (_ = _) |- _ ] => rewrite H
+                        | [ H : _ |- _ ] => rewrite H
                       end.
   Ltac comp_rewrite := match goal with
                          | [ |- context [fmap _  ( _ ◎ _) ]  ] => rewrite preserves_comp;
@@ -107,7 +107,7 @@ Section compose_functors.
                          | [ |- _ ] => fail 1 "no functors"
                        end.
 
-    Ltac stuff := assumption || intro || constructor || hyp_rewrite || reflexivity || apply _ || trivial|| id_rewrite || comp_rewrite.
+    Ltac stuff := trivial || intro || constructor || reflexivity || id_rewrite || comp_rewrite || hyp_rewrite.
 
   Global Instance compose_functors: Functor (f ∘ g) _.
   Proof.
