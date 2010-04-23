@@ -62,9 +62,7 @@ Section id_functor.
 
   Global Instance id_functor: Functor (id: C → C) _.
   Proof.
-   constructor; try reflexivity; try apply _. intros.
-   change (Setoid_Morphism (id: (a ⟶ b) → (a ⟶ b))).
-   apply _.
+   repeat (try constructor; try reflexivity; try apply _; try intro; trivial).
   Qed.
 
 End id_functor.
@@ -82,19 +80,38 @@ Section compose_functors.
 
   Global Instance comp_Fmap: Fmap (f ∘ g) := λ _ _, fmap f ∘ fmap g.
 
+  Hint Extern 4 => rewrite preserves_id.
+  Hint Extern 4 => rewrite preserves_comp.
+  Ltac hyp_rewrite := match goal with
+                        | [ H : (_ = _) |- _ ] => rewrite H
+                      end.
+  Ltac comp_rewrite := match goal with
+                         | [ |- context [fmap _  ( _ ◎ _) ]  ] => rewrite preserves_comp;
+                           lazymatch goal with
+                             | [ |- Functor _ _ ] => typeclasses eauto
+                             | [ |- _ ] => idtac
+                           end
+                         | [ |- _ ] => fail 1 "no functors"
+                       end.
+  Ltac unfold_fmap := repeat match goal with | [ |- context xxx [fmap ?ax ?bx] ] =>
+                                 let R := eval red in (fmap ax bx) in
+                                   let P := eval red in R in
+                                     let yyy := context xxx[P] in change yyy
+                               end.
+  Ltac id_rewrite := match goal with
+                         | [ |- context [fmap _ cat_id]  ] => rewrite preserves_id;
+                           lazymatch goal with
+                             | [ |- Functor _ _ ] => typeclasses eauto
+                             | [ |- _ ] => idtac
+                           end
+                         | [ |- _ ] => fail 1 "no functors"
+                       end.
+
+    Ltac stuff := assumption || intro || constructor || hyp_rewrite || reflexivity || apply _ || trivial|| id_rewrite || comp_rewrite.
+
   Global Instance compose_functors: Functor (f ∘ g) _.
-  Proof with intuition; try apply _.
-   pose proof (functor_from g).
-   pose proof (functor_to g).
-   pose proof (functor_to f).
-   constructor; intros; try apply _.
-     apply (@setoids.compose_morphisms _ _ _ _ _ _)...
-     apply (@functor_morphism _ _ _ _ _ _ _ _ _ _ f _)...
-     (* todo: this part really should be automatic *)
-    change (fmap f (fmap g (cat_id: a ⟶ a)) = cat_id).
-    repeat try rewrite preserves_id...
-   change (fmap f (fmap g (f0 ◎ g0)) = fmap f (fmap g f0) ◎ fmap f (fmap g g0)).
-   repeat try rewrite preserves_comp...
+  Proof.
+    repeat stuff; unfold_fmap; unfold compose; repeat stuff.
   Qed.
 
 End compose_functors.
