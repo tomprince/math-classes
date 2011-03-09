@@ -1,3 +1,4 @@
+Set Printing Universes.
 Require Import
   Relation_Definitions abstract_algebra theory.categories.
 
