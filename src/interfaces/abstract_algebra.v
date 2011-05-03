@@ -122,9 +122,9 @@ Section upper_classes.
     require commutative multiplication. *)
 
   Class IntegralDomain : Prop :=
-    { intdom_ring : Ring
-    ; intdom_nontrivial : PropHolds (1 ≠ 0)
-    ; intdom_nozeroes :> NoZeroDivisors A }.
+    { intdom_ring:> Ring
+    ; intdom_nontrivial: PropHolds (1 ≠ 0)
+    ; intdom_nozeroes:> NoZeroDivisors A }.
 
   (* We do not include strong extensionality for (-) and (/) because it can de derived *)
   Class Field {Aap: Apart A} {Arecip: Recip A} : Prop :=
@@ -151,13 +151,13 @@ Hint Extern 4 (PropHolds (1 ≠ 0)) => eapply @intdom_nontrivial : typeclass_ins
 Hint Extern 5 (PropHolds (1 ≶ 0)) => eapply @field_nontrivial : typeclass_instances.
 Hint Extern 5 (PropHolds (1 ≠ 0)) => eapply @decfield_nontrivial : typeclass_instances.
 
-(*
-For a strange reason Ring instances of Integers are sometimes obtained by
-Integers -> IntegralDomain -> Ring and sometimes directly. Making this an
-instance with a low priority instead of using intdom_ring:> Ring forces Coq to
-take the right way
-*)
-Hint Extern 10 (Ring _) => apply @intdom_ring : typeclass_instances.
+(* (*  *)
+(* For a strange reason Ring instances of Integers are sometimes obtained by *)
+(* Integers -> IntegralDomain -> Ring and sometimes directly. Making this an *)
+(* instance with a low priority instead of using intdom_ring:> Ring forces Coq to *)
+(* take the right way  *)
+(* *) *)
+(* Hint Extern 10 (Ring _) => apply @intdom_ring : typeclass_instances. *)
 
 Implicit Arguments recip_inverse [[A] [Ae] [Aplus] [Amult] [Azero] [Aone] [Anegate] [Aap] [Arecip] [Field]].
 Implicit Arguments dec_recip_inverse [[A] [Ae] [Aplus] [Amult] [Azero] [Aone] [Anegate] [Adec_recip] [DecField]].

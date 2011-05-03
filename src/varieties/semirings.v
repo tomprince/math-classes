@@ -47,15 +47,16 @@ Section from_instance.
     match o with plus => (+) | mult => (.*.) | zero => 0: A | one => 1:A end.
 
   Global Instance: Algebra sig _.
-  Proof. constructor. intro. apply _. intro o. destruct o; simpl; try apply _; unfold Proper; reflexivity. Qed.
+  Proof. constructor. intro. apply _. intro o. destruct o; simpl; try apply _;
+    unfold Proper; apply reflexivity. Qed.
 
   Lemma laws en (l: Laws en) vars: eval_stmt sig vars en.
   Proof.
    inversion_clear l; simpl.
-           apply associativity.
+           apply simple_associativity.
           apply commutativity.
          apply theory.rings.plus_0_l.
-        apply associativity.
+        apply simple_associativity.
        apply commutativity.
       apply theory.rings.mult_1_l.
      unfold algebra_op. simpl.
@@ -84,16 +85,14 @@ End ops_from_alg_to_sr.
 Lemma mor_from_sr_to_alg `{InVariety theory A} `{InVariety theory B}
   (f: ∀ u, A u → B u) `{!SemiRing_Morphism (f tt)}: HomoMorphism sig A B f.
 Proof.
- constructor.
-    intros []. apply _.
-   intros []; simpl.
-      apply rings.preserves_plus.
-     apply rings.preserves_mult.
-    change (f tt 0 = 0). apply rings.preserves_0.
-   change (f tt 1 = 1). apply rings.preserves_1.
-  change (Algebra theory A). apply _.
- change (Algebra theory B). apply _.
-Qed. (* todo: these [change]s should not be necessary at all. [apply] is too weak. report bug. *)
+ constructor; try apply _.
+  intros []; apply _.
+ intros []; simpl.
+    apply rings.preserves_plus.
+   apply rings.preserves_mult.
+  apply rings.preserves_0.
+ apply rings.preserves_1.
+Qed.
 
 Instance decode_variety_and_ops `{v: InVariety theory A}: SemiRing (A tt).
 Proof with simpl; auto.

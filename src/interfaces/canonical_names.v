@@ -7,6 +7,10 @@ Require Export
 (* Equality *)
 Class Equiv A := equiv: relation A.
 
+(* Revert to transparency to allow conversions during unification. *)
+Typeclasses Transparent Equiv.
+Typeclasses Transparent compose flip.
+
 (* We use this virtually everywhere, and so use "=" for it: *)
 Infix "=" := equiv : type_scope.
 Notation "(=)" := equiv (only parsing).
@@ -78,6 +82,7 @@ Class Cast A B := cast: A → B.
 Implicit Arguments cast [[Cast]].
 Notation "' x" := (cast _ _ x) (at level 20).
 Instance: Params (@cast) 3.
+Typeclasses Transparent Cast.
 
 (* Other canonically named relations/operations/constants: *)
 Class SgOp A := sg_op: A → A → A.
@@ -102,6 +107,9 @@ Class Difference A := difference : A → A → A.
 
 Class Le A := le: relation A.
 Class Lt A := lt: relation A.
+
+Typeclasses Transparent SgOp MonUnit Plus Mult Zero One.
+Typeclasses Transparent Le Lt.
 
 Definition NonNeg R `{Zero R} `{Le R} := sig (le zero).
 Definition Pos R `{Zero R} `{Equiv R} `{Lt R} := sig (lt zero).
@@ -268,6 +276,7 @@ Instance: Params (@abs) 6.
 (* Common properties: *)
 Class Inverse `(A → B) : Type := inverse: B → A.
 Implicit Arguments inverse [[A] [B] [Inverse]].
+Typeclasses Transparent Inverse.
 Notation "f ⁻¹" := (inverse f) (at level 30).
 
 Class Idempotent `{ea : Equiv A} (f: A → A → A) (x : A) : Prop := idempotency: f x x = x.
@@ -295,7 +304,8 @@ Class Commutative `{Equiv B} `(f : A → A → B) : Prop := commutativity: ∀ x
 Class HeteroAssociative {A B C AB BC} `{Equiv ABC}
      (fA_BC: A → BC → ABC) (fBC: B → C → BC) (fAB_C: AB → C → ABC) (fAB : A → B → AB): Prop
    := associativity : ∀ x y z, fA_BC x (fBC y z) = fAB_C (fAB x y) z.
-Class Associative `{Equiv A} f := simple_associativity:> HeteroAssociative f f f f.
+Class Associative `{Equiv A} f := simple_associativity: HeteroAssociative f f f f.
+Hint Resolve @simple_associativity : typeclass_instances.
 Notation ArrowsAssociative C := (∀ {w x y z: C}, HeteroAssociative (◎) (comp z _ _ ) (◎) (comp y x w)).
 
 Class Involutive `{Equiv A} (f : A → A) := involutive: ∀ x, f (f x) = x.

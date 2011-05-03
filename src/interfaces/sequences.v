@@ -100,9 +100,6 @@ Section practical.
 
   Next Obligation. apply PS, _. Qed.
 
-  (* Needed for some type conversions. *)
-  Typeclasses Transparent compose.
-
   Program Definition posh_extend (x: setoids.Object) (y: monoids.Object)
     (X: x ⟶ monoids.forget y): posh_free x ⟶ y
     := λ u, match u return posh_free x u → y u with
