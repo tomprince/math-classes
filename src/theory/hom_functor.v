@@ -34,10 +34,11 @@ Section contents.
 
   Context `{!Functor (F:C -> setoid.Object) F'}.
   Definition Nat := {η : homFrom ⇛ F | NaturalTransformation η}.
-    Instance: ∀ v w, Proper (equiv ==> equiv) (fmap F (v:=v)(w:=w)).
+  Instance: ∀ v w, Proper ((=) ==> (=)) (fmap F (v:=v)(w:=w)).
     repeat intro.
+    (* FIXME *)
     apply Functor0; [try rewrite H1; reflexivity| assumption].
-    Qed.
+  Qed.
   Program Definition l : Nat → setoid.T (F x) := λ X, ` (X x) cat_id.
   Program Instance r: Inverse l (* setoid.T (F x) → Nat homFrom ⇛ F*) := λ X a t, ` (F' _ _ t) X.
   Next Obligation.
@@ -60,9 +61,9 @@ Section contents.
     apply Proper_instance_0; [assumption|reflexivity].
   Qed.
 
-  Global Instance: Equiv (homFrom  ⇛ F) := pointwise_dependent_relation C (λ a, homFrom a ⟶ F a) (λ a, equiv).
+  Global Instance: Equiv (homFrom  ⇛ F) := pointwise_dependent_relation C (λ a, homFrom a ⟶ F a) (λ a, (=)).
   Global Instance: Equiv Nat  := sig_equiv (H:=Equiv_instance_0) _.
-  Global Instance: Setoid_Morphism l.
+  Global Instance sm_l: Setoid_Morphism l.
   Proof.
     constructor; try typeclasses eauto.
     repeat intro.
@@ -89,7 +90,7 @@ Section contents.
     simpl.
     apply (proper_prf (m:=fmap F) u v); auto.
   Qed.
-  Global Instance: Bijective l.
+  Global Instance: Bijective l := {}.
 
 End contents.
 
