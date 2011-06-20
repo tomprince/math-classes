@@ -80,7 +80,7 @@ Section compose_functors.
     `{∀ x y: C, Equiv (x ⟶ y)}
     `{!Functor (f: B → C) f'} `{!Functor (g: A → B) g'}.
 
-  Global Instance comp_Fmap: Fmap (f ∘ g) := λ _ _, fmap f ∘ fmap g.
+  Instance comp_Fmap: Fmap (f ∘ g) := λ _ _, fmap f ∘ fmap g.
 
   Global Instance compose_functors: Functor (f ∘ g) _.
   Proof with intuition; try apply _.
@@ -98,6 +98,8 @@ Section compose_functors.
   Qed.
 
 End compose_functors.
+
+Hint Extern 3 (Fmap (_ ∘ _)) => class_apply comp_Fmap: typeclass_instances.
 
 (** The Functor class is nice and abstract and theory-friendly, but not as convenient
  to use for regular programming as Haskell's Functor class. The reason for this is that

@@ -2,7 +2,7 @@ Require Import
   Relation_Definitions
   abstract_algebra theory.setoids interfaces.functors theory.categories.
 
-Require categories.setoid categories.dual.
+Require categories.setoids categories.dual.
 Require Import workaround_tactics.
 
 Section contents.
@@ -32,14 +32,14 @@ Section contents.
    apply comp_assoc.
   Qed.
 
-  Context `{!Functor (F:C -> setoid.Object) F'}.
+  Context `{!Functor (F:C -> setoids.Object) F'}.
   Definition Nat := {η : homFrom ⇛ F | NaturalTransformation η}.
   Instance: ∀ v w, Proper ((=) ==> (=)) (fmap F (v:=v)(w:=w)).
     repeat intro.
     (* FIXME *)
     apply Functor0; [try rewrite H1; reflexivity| assumption].
   Qed.
-  Program Definition l : Nat → setoid.T (F x) := λ X, ` (X x) cat_id.
+  Program Definition l : Nat → setoids.T (F x) := λ X, ` (X x) cat_id.
   Program Instance r: Inverse l (* setoid.T (F x) → Nat homFrom ⇛ F*) := λ X a t, ` (F' _ _ t) X.
   Next Obligation.
     constructor; try typeclasses eauto.
