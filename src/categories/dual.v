@@ -1,10 +1,8 @@
 Require Import
   Relation_Definitions abstract_algebra theory.categories interfaces.functors.
 
-Definition op (C: Type) := C.
-Notation "C '^op'" := (op C) (at level 1).
-
 Section contents.
+  Notation "C '^op'" := C (at level 1).
 
   Context `{c: @Category Object A Aeq Aid Acomp}.
 
@@ -12,7 +10,8 @@ Section contents.
 
   Global Instance: CatId Object^op := Aid.
   Global Instance: CatComp Object^op := λ _ _ _, flip (Acomp _ _ _).
-  Instance e: ∀ x y: Object^op, Equiv (x ⟶ y) := λ x y, Aeq y x.
+  Global Instance e: ∀ x y: Object^op, Equiv (x ⟶ y) := λ x y, Aeq y x.
+
   Global Instance: ∀ (x y: Object^op), Equivalence (e x y).
   Proof. intros. change (Equivalence ((=): Equiv (A y x))). apply _. Qed.
 
@@ -36,7 +35,7 @@ Section contents.
 
 End contents.
 
-Global Hint Extern 4 (Equiv (@Arrow (_ ^op) _ _ _)) => class_apply @e : typeclass_instances.
+Global Hint Extern 4 (Equiv (@flipA _ _)) => class_apply @e : typeclass_instances.
 
 Section functors.
 
@@ -44,23 +43,19 @@ Section functors.
 
   Context {C D} F `{Functor C (H:=Ce) D (H1:=De) F}.
 
-  Typeclasses Opaque op.
-  Definition fmap_op: @Fmap C^op _ D^op _ F := fun v w => fmap F (v:=w)(w:=v).
+  Definition fmap_op: @Fmap C flipA D flipA F := fun v w => fmap F (v:=w)(w:=v).
 
-  Hint Extern 100 (@CatId _ (@flipA _ _)) => apply CatId_instance_0 : typeclass_instances.
-  Hint Extern 100 (@CatComp _ (@flipA _ _)) => apply CatComp_instance_0 : typeclass_instances.
   Global Instance: Functor F fmap_op.
   Proof with intuition.
     unfold e, fmap_op, flipA, flip, CatId_instance_0, CatComp_instance_0, flip.
     pose proof (functor_from F).
     pose proof (functor_to F).
     constructor; repeat intro.
-        apply cat.
-       apply cat.
-      destruct (functor_morphism F b a).
-      constructor...
-     set (preserves_id F a)...
-    apply (@preserves_comp _ _ Ce _ _ _ _ De _ _ F)...
+    - apply cat.
+    - apply cat.
+    - constructor; typeclasses eauto.
+    - set (preserves_id F a)...
+    - set (preserves_comp F (H3:=H3) g f)...
   Qed.
 
 End functors.

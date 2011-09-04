@@ -40,6 +40,8 @@ Definition forget: Object → setoids.Object :=
      ∘ forget_algebra.object theory ∘ forget_variety.forget theory.
   (* todo: too ugly *)
 
+Hint Unfold forget : typeclass_instances.
+
 (* Now follow a series of encoding/decoding functions to convert between the
  specialized Monoid/Monoid_Morphism type classes and the universal
  Algebra/InVariety/HomoMorphism type classes instantiated with the above

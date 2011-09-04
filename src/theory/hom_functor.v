@@ -33,20 +33,17 @@ Section contents.
   Qed.
 
   Context `{!Functor (F:C -> setoids.Object) F'}.
-  Definition Nat := {η : homFrom ⇛ F | NaturalTransformation η}.
-  Instance: ∀ v w, Proper ((=) ==> (=)) (fmap F (v:=v)(w:=w)).
-    repeat intro.
-    (* FIXME *)
-    apply Functor0; [try rewrite H1; reflexivity| assumption].
-  Qed.
-  Program Definition l : Nat → setoids.T (F x) := λ X, ` (X x) cat_id.
-  Program Instance r: Inverse l (* setoid.T (F x) → Nat homFrom ⇛ F*) := λ X a t, ` (F' _ _ t) X.
+Require categories.functors.
+  Program Definition l : (functors.object homFrom⟶functors.object F) → setoids.T (F x) := λ X, ` (functors.eta X x) cat_id.
+  Program Definition r' : setoids.T (F x) → (homFrom ⇛ F) := λ X a t, (F' _ _ t) X.
   Next Obligation.
     constructor; try typeclasses eauto.
     intros A B ?.
     simpl in *.
     apply Functor0; [rewrite H1|]; reflexivity.
   Qed.
+  Program Instance r: Inverse l (* setoid.T (F x) → Nat homFrom ⇛ F*) := λ X,
+    functors.arrow (functors.object homFrom) (functors.object F) (r' X) _.
   Next Obligation.
     intros a b f s t Hst. simpl.
     fold (fmap (v:=x)(w:=b) F).
@@ -58,11 +55,10 @@ Section contents.
     simpl in *.
     pose (functor_morphism F a b).
     apply s0.
-    apply Proper_instance_0; [assumption|reflexivity].
+    pose (λ v w, sm_proper (f:=fmap F(v:=v)(w:=w))).
+    apply p; [assumption|reflexivity].
   Qed.
 
-  Global Instance: Equiv (homFrom  ⇛ F) := pointwise_dependent_relation C (λ a, homFrom a ⟶ F a) (λ a, (=)).
-  Global Instance: Equiv Nat  := sig_equiv (H:=Equiv_instance_0) _.
   Global Instance sm_l: Setoid_Morphism l.
   Proof.
     constructor; try typeclasses eauto.
@@ -94,4 +90,34 @@ Section contents.
 
 End contents.
 
-Notation homTo := (homFrom (Arrows0:=flip (_: Arrows _))).
+Section contents2.
+
+  Context `{Category C} (x: C).
+
+  Definition homTo (y: C): setoids.Object := @setoids.object (y ⟶ x) _ _.
+
+  Global Program Instance: Fmap (Arrows0:=dual.flipA) homTo := λ v w X, (◎ X).
+  Next Obligation.
+    constructor; try apply _.
+    intros f g Hfg.
+    apply comp_proper; auto using reflexivity.
+  Qed.
+
+  Global Instance: Functor homTo _ := {}.
+  Proof.
+  - apply dual.cat.
+  - constructor; try apply _.
+    repeat intro. simpl in *.
+    apply comp_proper; auto.
+  - repeat intro.
+    simpl.
+    rewrite H1.
+    apply right_identity.
+  - repeat intro.
+    simpl.
+    unfold compose.
+    rewrite H1.
+    apply (comp_assoc y0).
+  Qed.
+
+End contents2.
