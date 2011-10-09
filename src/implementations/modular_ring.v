@@ -9,7 +9,7 @@ Section modular_ring.
   Context `{Ring Z} {b : Z}.
   Add Ring R : (rings.stdlib_ring_theory Z).
 
-  Global Instance: RingIdeal Z (is_multiple b).
+  Lemma modular_ideal: RingIdeal Z (is_multiple b).
   Proof.
     unfold is_multiple. split.
         solve_proper.

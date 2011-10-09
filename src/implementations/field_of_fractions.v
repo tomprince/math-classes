@@ -161,7 +161,7 @@ Next Obligation.
   now apply (den_ne_0 x).
 Qed.
 
-Instance: Proper ((=) ==> (=)) Frac_lift.
+Instance Proper_instance_4: Proper ((=) ==> (=)) Frac_lift.
 Proof.
   intros x y E.
   unfold equiv, Frac_equiv, Frac_lift in *. simpl.
