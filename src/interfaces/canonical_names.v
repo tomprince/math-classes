@@ -4,6 +4,8 @@ Global Set Automatic Introduction.
 Require Export
   Morphisms Setoid Program Unicode.Utf8 Utf8_core.
 
+Require Import stdlib_hints.
+
 (* Equality *)
 Class Equiv A := equiv: relation A.
 
@@ -20,6 +22,10 @@ Notation "(≠)" := (λ x y, ¬x = y) (only parsing).
 Notation "x ≠ y":= (¬x = y): type_scope.
 Notation "( x ≠)" := (λ y, x ≠ y) (only parsing).
 Notation "(≠ x )" := (λ y, y ≠ x) (only parsing).
+
+Hint Extern 2 (?x = ?x) => reflexivity.
+Hint Extern 2 (?x = ?y) => auto_symm.
+Hint Extern 2 (?x = ?y) => auto_trans.
 
 (* Coq sometimes uses an incorrect DefaultRelation, so we override it. *)
 Instance equiv_default_relation `{Equiv A} : DefaultRelation (=) | 3.
@@ -170,6 +176,10 @@ Notation "R ⁻" := (NonPos R) (at level 20, no associativity).
 Notation "R ∞" := (PosInf R) (at level 20, no associativity).
 Notation "x ↾ p" := (exist _ x p) (at level 20).
 
+Ltac simpl_sig_equiv := match goal with [ |- (@equiv _ (sig_equiv (H:=?e) ?P) (?x↾_) (?y ↾_))] => change (@equiv _ e x y) end.
+Hint Extern 4 (@equiv _ (sig_equiv (H:=?e) ?P) (?x↾_) (?y ↾_)) => simpl_sig_equiv.
+
+
 Infix "&" := sg_op (at level 50, left associativity).
 Notation "(&)" := sg_op (only parsing).
 Notation "( x &)" := (sg_op x) (only parsing).
@@ -268,6 +278,10 @@ Notation "(→)" := (λ x y, x → y).
 Notation "t $ r" := (t r) (at level 65, right associativity, only parsing).
 Notation "(∘)" := compose (only parsing).
 
+Hint Extern 2 (?x ≤ ?y) => reflexivity.
+Hint Extern 4 (?x ≤ ?z) => auto_trans.
+Hint Extern 4 (?x < ?z) => auto_trans.
+
 Class Abs A `{Equiv A} `{Le A} `{Zero A} `{Negate A} := abs_sig: ∀ (x : A), { y : A | (0 ≤ x → y = x) ∧ (x ≤ 0 → y = -x)}.
 Definition abs `{Abs A} := λ x : A, ` (abs_sig x).
 Instance: Params (@abs_sig) 6.
@@ -322,6 +336,7 @@ Implicit Arguments cotransitive [[A] [R] [CoTransitive] [x] [y]].
 
 Class AntiSymmetric `{Ae : Equiv A} (R : relation A) : Prop := antisymmetry: ∀ x y, R x y → R y x → x = y.
 Implicit Arguments antisymmetry [[A] [Ae] [AntiSymmetric]].
+Hint Unfold AntiSymmetric.
 
 Class LeftHeteroDistribute {A B} `{Equiv C} (f : A → B → C) (g_r : B → B → B) (g : C → C → C) : Prop
   := distribute_l : ∀ a b c, f a (g_r b c) = g (f a b) (f a c).

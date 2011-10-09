@@ -19,11 +19,6 @@ Section setoid_functor_as_posh_functor.
 
   Program Instance: Fmap map_setoid := λ v w X, @sfmap F H _ _ (proj1_sig X).
 
-  Next Obligation. Proof.
-   destruct v, w, X. simpl in *.
-   apply sfunctor_makes_morphisms; apply _.
-  Qed.
-
   Instance: Functor map_setoid _.
   Proof with auto; intuition.
    pose proof (@sfunctor_makes_setoids F _ _ _).

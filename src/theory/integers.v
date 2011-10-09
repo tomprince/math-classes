@@ -98,7 +98,6 @@ Global Program Instance: ∀ x y: Int, Decision (x = y) | 10 := λ x y,
   | right E => right _
   end.
 Next Obligation. now apply (injective (integers_to_ring Int (SRpair nat))). Qed.
-Next Obligation. intros F. apply E. now rewrite F. Qed.
 
 Instance: PropHolds ((1:Int) ≠ 0).
 Proof.

@@ -153,7 +153,6 @@ Section in_domain.
   Global Instance in_domain_equivalence: Equivalence R → Equivalence in_domain.
   Proof with intuition.
    constructor; repeat intro; unfold equiv, in_domain in *...
-   transitivity (f y)...
   Qed.
 
 End in_domain.
@@ -231,8 +230,9 @@ Section first_iso.
    destruct X.
    apply (@op_closed_proper σ B _ _ _ image image_proper _ (o1 z) (o1 (f _ x))).
     apply H3...
-   apply IHo0 with (o2 x)...
-   apply _.
+   apply IHo0 with (o2 x).
+   - apply _. (* FIXME: looping *)
+   - intuition.
   Qed.
 
   Definition quot_obj: algebras.Object σ := algebras.object σ A (algebra_equiv:=Φ). (* A/Φ *)
@@ -260,14 +260,15 @@ Section first_iso.
     λ a X, existT _ (f a X) (existT _ X (reflexivity _)).
 
   Next Obligation. Proof with try apply _; intuition.
-   repeat constructor... intro...
+   repeat constructor...
    unfold ua_subalgebraT.impl.
    generalize (subset_closed image o).
    unfold algebra_op.
    generalize (H o) (H1 o) (preserves σ A B f o)
      (_: Proper (=) (H o)) (_: Proper (=) (H1 o)).
-   induction (σ o); simpl...
-   apply IHo0...
+   induction (σ o); simpl.
+   - try apply _; intuition.  (* FIXME: looping *)
+   - intros. apply IHo0...
   Qed.
 
   Theorem first_iso: categories.iso_arrows back forth.

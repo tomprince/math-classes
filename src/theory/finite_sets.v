@@ -29,7 +29,7 @@ Section fset_props.
     do 2 case (decide _); try reflexivity; rewrite E; contradiction.
   Qed.
 
-  Global Instance: Injective singleton.
+  Global Instance: Injective (singleton:A->_).
   Proof.
     split; try apply _. intros x y E1. apply stable. intros E2.
     assert (fset_extend (F x y) {{ x }} ≠ fset_extend (F x y) {{ y }}) as E3.

@@ -60,10 +60,11 @@ Section cut_minus_properties.
   Proof. rewrite commutativity. now apply cut_minus_le. Qed.
 
   Lemma cut_minus_le_trans x y z : y ≤ x → z ≤ y → (x ∸ y) + (y ∸ z) = x ∸ z.
-  Proof.
-    intros. apply (right_cancellation (+) z).
-    rewrite <-associativity, !cut_minus_le; try easy.
-    now transitivity y.
+  Proof with auto; try reflexivity. 
+    intros. 
+    apply (right_cancellation (+) z)...
+    rewrite <-associativity. 
+    rewrite !cut_minus_le... 
   Qed.
   Hint Resolve cut_minus_le_trans.
 
@@ -74,9 +75,15 @@ Section cut_minus_properties.
   Proof.
     intros E F. apply (right_cancellation (+) (y₁ + y₂)).
     rewrite cut_minus_le.
+<<<<<<< HEAD
      setoid_replace (x₁ ∸ y₁ + (x₂ ∸ y₂) + (y₁ + y₂)) with (((x₁ ∸ y₁) + y₁) + ((x₂ ∸ y₂) + y₂)) by ring.
      now rewrite !cut_minus_le.
     now apply semirings.plus_le_compat.
+=======
+     setoid_replace (x1 ∸ y1 + (x2 ∸ y2) + (y1 + y2)) with (((x1 ∸ y1) + y1) + ((x2 ∸ y2) + y2)) by ring.
+     rewrite !cut_minus_le...
+    apply semirings.plus_le_compat...
+>>>>>>> c898885... stuff.
   Qed.
 
   (* We need 0 ≤ x, e.g. (-1) * (2 ∸ 1) = -1, whereas (-2) ∸ (-1) = 0 *)
@@ -178,7 +185,7 @@ Section cut_minus_properties.
   Proof with eauto; try ring.
     unfold meet, min, sort.
     case (decide_rel (≤) x y); case (decide_rel (≤) y z); intros F G; simpl.
-       rewrite (cut_minus_0 x z)... transitivity y...
+       rewrite (cut_minus_0 x z)...
       rewrite (cut_minus_0 x y)...
      rewrite (cut_minus_0 y z)...
     symmetry...
@@ -208,7 +215,6 @@ Section cut_minus_properties.
 
   Lemma cut_minus_negate (x : R) : x ≤ 0 → 0 ∸ x = -x.
   Proof. intros. now rewrite <-(rings.plus_0_l (-x)), cut_minus_ring_minus. Qed.
-End cut_minus_properties.
 
 (* * Default implementation for Rings *)
 Section cut_minus_default.

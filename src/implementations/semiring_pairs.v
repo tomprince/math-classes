@@ -283,9 +283,9 @@ Section with_full_pseudo_semiring_order.
     unfold apart, SRpair_apart in *. simpl in *.
     destruct (strong_binary_extensionality (+)
        (zp * (xp + yn)) (zn * (yp + xn)) (zp * (yp + xn)) (zn * (xp + yn))).
-      eapply strong_setoids.apart_proper; eauto; ring.
+      eapply strong_setoids.apart_proper; try apply E1; ring.
      now apply (strong_extensionality (zp *.)).
-    symmetry. now apply (strong_extensionality (zn *.)).
+    symmetry; now apply (strong_extensionality (zn *.)).
   Qed.
 
   Strategy -10 [ le lt ].
