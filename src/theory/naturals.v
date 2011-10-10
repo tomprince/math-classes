@@ -159,7 +159,7 @@ Section borrowed_from_nat.
   Qed.
 
   Lemma one_sum (x y : N) : x + y = 1 → (x = 1 ∧ y = 0) ∨ (x = 0 ∧ y = 1).
-  Proof. 
+  Proof.
    rapply (from_nat_stmt (x' + y' === 1 -=> Disj _ (Conj _ (x' === 1) (y' === 0)) (Conj _ (x' === 0) (y' === 1))) (two_vars x y)).
    intros. simpl. intros. edestruct Plus.plus_is_one; eauto.
   Qed.

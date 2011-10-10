@@ -23,7 +23,7 @@ Section contents.
    change (comp (H:=A) _ _ _ x1 x0 = comp (H:=A) _ _ _ y1 y0).
    now rewrite E, F.
   Qed.
-  
+
   Instance cat: @Category Object^op flipA _ _ _.
   Proof with auto.
    destruct c.

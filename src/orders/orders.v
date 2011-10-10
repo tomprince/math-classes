@@ -213,7 +213,7 @@ Section full_partial_order.
        end
      | right E1 => right _
      end.
-  Next Obligation. apply not_symmetry. now apply not_le_ne. Qed. 
+  Next Obligation. apply not_symmetry. now apply not_le_ne. Qed.
   Next Obligation. now apply not_le_ne. Qed.
 
   Definition lt_dec_slow `{!TrivialApart A} `{∀ x y, Decision (x ≤ y)} :
