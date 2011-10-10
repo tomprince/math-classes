@@ -101,7 +101,6 @@ Section cut_minus_properties.
   Proof.
     destruct (total (≤) y z).
      rewrite !cut_minus_0; intuition.
-     now apply (order_preserving (x +)).
     apply (right_cancellation (+) (x + z)).
     transitivity ((y ∸ z + z) + x); try ring.
     rewrite !cut_minus_le; try easy; try ring.
@@ -249,3 +248,4 @@ Section order_preserving.
     now apply (order_preserving _).
   Qed.
 End order_preserving.
+End cut_minus_properties.

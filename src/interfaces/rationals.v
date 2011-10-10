@@ -22,3 +22,4 @@ Class Rationals A {e plus mult zero one neg recip} `{U : !RationalsToFrac A} : P
   ; rationals_frac :> ∀ `{Integers Z}, Injective (rationals_to_frac A Z)
   ; rationals_frac_mor :> ∀ `{Integers Z}, SemiRing_Morphism (rationals_to_frac A Z)
   ; rationals_embed_ints :> ∀ `{Integers Z}, Injective (integers_to_ring Z A) }.
+Hint Extern 4 (Injective (integers_to_ring _ _)) => apply @rationals_embed_ints: typeclass_instances.
