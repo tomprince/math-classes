@@ -296,7 +296,7 @@ Section propers.
     assert (∀ (f g : A → B), g = f → Order_Morphism f → Order_Morphism g) as P.
      intros f g E [[? ? ?] ?];
      split; auto; apply morphism_proper with f. easy. split; easy.
-    firstorder.
+    split; apply P; [symmetry|]; easy.
   Qed.
 
   Global Instance order_preserving_proper: Proper ((=) ==> iff) (@OrderPreserving A B _ _ _ _).
@@ -306,7 +306,7 @@ Section propers.
      split.
       eapply order_morphism_proper; eauto. now repeat (split; try apply _).
      intros x y ?. rewrite (E x x), (E y y); now auto.
-    firstorder.
+    split; apply P; [symmetry|]; easy.
   Qed.
 
   Global Instance order_reflecting_proper: Proper ((=) ==> iff) (@OrderReflecting A B _ _ _ _).
@@ -316,7 +316,7 @@ Section propers.
      split.
       eapply order_morphism_proper; eauto. now repeat (split; try apply _).
      intros x y F. rewrite (E x x), (E y y) in F; now auto.
-    firstorder.
+    split; apply P; [symmetry|]; easy.
   Qed.
 
   Global Instance order_embedding_proper: Proper ((=) ==> iff) (@OrderEmbedding A B _ _ _ _).

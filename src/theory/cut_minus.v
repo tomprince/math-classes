@@ -60,11 +60,10 @@ Section cut_minus_properties.
   Proof. rewrite commutativity. now apply cut_minus_le. Qed.
 
   Lemma cut_minus_le_trans x y z : y ≤ x → z ≤ y → (x ∸ y) + (y ∸ z) = x ∸ z.
-  Proof with auto; try reflexivity. 
-    intros. 
-    apply (right_cancellation (+) z)...
-    rewrite <-associativity. 
-    rewrite !cut_minus_le... 
+  Proof.
+    intros. apply (right_cancellation (+) z).
+    rewrite <-associativity, !cut_minus_le; try easy.
+    now transitivity y.
   Qed.
   Hint Resolve cut_minus_le_trans.
 
@@ -75,9 +74,9 @@ Section cut_minus_properties.
   Proof.
     intros E F. apply (right_cancellation (+) (y₁ + y₂)).
     rewrite cut_minus_le.
-     setoid_replace (x1 ∸ y1 + (x2 ∸ y2) + (y1 + y2)) with (((x1 ∸ y1) + y1) + ((x2 ∸ y2) + y2)) by ring.
-     rewrite !cut_minus_le...
-    apply semirings.plus_le_compat...
+     setoid_replace (x₁ ∸ y₁ + (x₂ ∸ y₂) + (y₁ + y₂)) with (((x₁ ∸ y₁) + y₁) + ((x₂ ∸ y₂) + y₂)) by ring.
+     now rewrite !cut_minus_le.
+    now apply semirings.plus_le_compat.
   Qed.
 
   (* We need 0 ≤ x, e.g. (-1) * (2 ∸ 1) = -1, whereas (-2) ∸ (-1) = 0 *)
