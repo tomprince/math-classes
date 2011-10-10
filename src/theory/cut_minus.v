@@ -75,15 +75,9 @@ Section cut_minus_properties.
   Proof.
     intros E F. apply (right_cancellation (+) (y₁ + y₂)).
     rewrite cut_minus_le.
-<<<<<<< HEAD
-     setoid_replace (x₁ ∸ y₁ + (x₂ ∸ y₂) + (y₁ + y₂)) with (((x₁ ∸ y₁) + y₁) + ((x₂ ∸ y₂) + y₂)) by ring.
-     now rewrite !cut_minus_le.
-    now apply semirings.plus_le_compat.
-=======
      setoid_replace (x1 ∸ y1 + (x2 ∸ y2) + (y1 + y2)) with (((x1 ∸ y1) + y1) + ((x2 ∸ y2) + y2)) by ring.
      rewrite !cut_minus_le...
     apply semirings.plus_le_compat...
->>>>>>> c898885... stuff.
   Qed.
 
   (* We need 0 ≤ x, e.g. (-1) * (2 ∸ 1) = -1, whereas (-2) ∸ (-1) = 0 *)

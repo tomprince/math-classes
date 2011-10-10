@@ -284,6 +284,9 @@ Hint Extern 4 (OrderPreserving (_ ∘ _)) => class_apply @compose_order_preservi
 Hint Extern 4 (OrderReflecting (_ ∘ _)) => class_apply @compose_order_reflecting : typeclass_instances.
 Hint Extern 4 (OrderEmbedding (_ ∘ _)) => class_apply @compose_order_embedding : typeclass_instances.
 
+Instance ext_sym `{Equiv A} `{Equiv B} `{Symmetric (A:=A) (=)} `{Symmetric (A:=B) (=)}: Symmetric (A:=A→B) (=).
+Proof. intros ?? E ???; symmetry; apply E; symmetry; assumption. Qed.
+
 Section propers.
   Context `{Equiv A} `{Equiv B} `{Le A} `{Le B} `{!Symmetric ((=):A→A→Prop)} `{!Symmetric ((=):B→B→Prop)}.
 
