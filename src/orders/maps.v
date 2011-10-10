@@ -1,12 +1,11 @@
 Require Import
   abstract_algebra interfaces.orders orders.orders theory.setoids theory.strong_setoids.
 
-Local Existing Instance order_morphism_po_a.
-Local Existing Instance order_morphism_po_b.
-Local Existing Instance strict_order_morphism_so_a.
-Local Existing Instance strict_order_morphism_so_b.
-Local Existing Instance order_morphism_mor.
-Local Existing Instance strict_order_morphism_mor.
+Local Hint Extern 100 (PartialOrder _) => apply (order_morphism_po_a _): typeclass_instances.
+Local Hint Extern 100 (PartialOrder _) => apply (order_morphism_po_b _): typeclass_instances.
+Local Hint Extern 100 (StrictSetoidOrder _) => apply (strict_order_morphism_so_a _): typeclass_instances.
+Local Hint Extern 100 (StrictSetoidOrder _) => apply (strict_order_morphism_so_b _): typeclass_instances.
+Local Existing Instances order_morphism_mor strict_order_morphism_mor.
 
 (* If a function between strict partial orders is order preserving (back), we can
   derive that it is strictly order preserving (back) *)
@@ -107,6 +106,7 @@ Section order_preserving_ops.
     repeat (split; try apply _).
      solve_proper.
     intros x y E.
+    Local Hint Extern 4 => apply po_proper :typeclass_instances.
     rewrite 2!(commutativity _ z).
     now apply order_preserving.
   Qed.
@@ -119,6 +119,7 @@ Section order_preserving_ops.
     repeat (split; try apply _).
      solve_proper.
     intros x y E.
+    Local Hint Extern 4 => apply strict_setoid_order_proper :typeclass_instances.
     rewrite 2!(commutativity _ z).
     now apply strictly_order_preserving.
   Qed.
@@ -256,7 +257,7 @@ Section composition.
 
   Instance compose_order_morphism:
     Order_Morphism f → Order_Morphism g → Order_Morphism (g ∘ f).
-  Proof. split; [ apply _ | apply _ | apply (order_morphism_po_b g) ]. Qed.
+  Proof. split; [ apply _ | apply (order_morphism_po_a f) | apply (order_morphism_po_b g) ]. Qed.
 
   Instance compose_order_preserving:
     OrderPreserving f → OrderPreserving g → OrderPreserving (g ∘ f).
@@ -284,13 +285,14 @@ Hint Extern 4 (OrderReflecting (_ ∘ _)) => class_apply @compose_order_reflecti
 Hint Extern 4 (OrderEmbedding (_ ∘ _)) => class_apply @compose_order_embedding : typeclass_instances.
 
 Section propers.
-  Context `{Equiv A} `{Equiv B} `{Le A} `{Le B}.
+  Context `{Equiv A} `{Equiv B} `{Le A} `{Le B} `{!Symmetric ((=):A→A→Prop)} `{!Symmetric ((=):B→B→Prop)}.
+
 
   Global Instance order_morphism_proper: Proper ((=) ==> iff) (@Order_Morphism A B _ _ _ _).
   Proof.
     assert (∀ (f g : A → B), g = f → Order_Morphism f → Order_Morphism g) as P.
-     intros f g E [[? ? ?] ?].
-     split; auto. apply morphism_proper with f. easy. split; easy.
+     intros f g E [[? ? ?] ?];
+     split; auto; apply morphism_proper with f. easy. split; easy.
     firstorder.
   Qed.
 

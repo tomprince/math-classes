@@ -31,7 +31,7 @@ Section fset_props.
 
   Global Instance: Injective singleton.
   Proof.
-    split; try apply _. intros x y E1. apply stable; intros E2.
+    split; try apply _. intros x y E1. apply stable. intros E2.
     assert (fset_extend (F x y) {{ x }} ≠ fset_extend (F x y) {{ y }}) as E3.
      rewrite <-!(fset_extend_correct_applied (F x y)).
      unfold F. do 2 case (decide _); firstorder.
@@ -116,7 +116,7 @@ Section fset_map_inverse.
 
   Global Instance fset_map_inverse: Inverse (fset_map f) := fset_map (f⁻¹).
 
-  Instance fset_map_surjective: Surjective (fset_map f).
+  Global Instance fset_map_surjective: Surjective (fset_map f).
   Proof.
     pose proof (fset_car_setoid A). pose proof (fset_car_setoid B).
     pose proof (injective_mor f). split; try apply _.
@@ -173,9 +173,16 @@ Section full_fset_props.
     P ∅ → (∀ x X, x ∉ X → P X → P ({{ x }} ⊔ X)) → ∀ X, P X.
   Proof.
     intros Pempty Padd X.
+    Local Hint Extern 4 (Inverse (fset_map _)) => eapply @fset_map_inverse : typeclass_instances.
+    Local Hint Extern 4 (Bijective (fset_map _)) => apply fset_map_bijective: typeclass_instances.
+    Local Hint Extern 4 (Bijective id) => apply jections.id_bijective: typeclass_instances.
     mc_setoid_replace X with (from_listset (to_listset X))
      by (symmetry; apply (jections.bijective_applied _)).
     generalize (to_listset X). apply listset_induction.
+      Local Hint Extern 4 => apply setoids.id_morphism.
+      Local Hint Extern 4 (Setoid (listset _)) => apply @list_finite_set.Setoid_instance_1 :typeclass_instances.
+      pose (_:Setoid (listset A)).
+      Local Hint Extern 4 => apply fset_map_mor : typeclass_instances.
       solve_proper.
      now rewrite preserves_bottom.
     intros x l E1 E2.
@@ -184,7 +191,7 @@ Section full_fset_props.
     apply Padd; auto. intros E3. destruct E1. now apply (preserves_in id x).
   Qed.
 
-  Global Instance fset_in_proper : Proper ((=) ==> (=) ==> iff) (∈).
+  Global Instance fset_in_proper : Proper ((=) ==> (=) ==> iff) ((∈):A->_).
   Proof. intros x y E1 X Y E2. now rewrite !fset_in_singleton_le, E1, E2. Qed.
 
   Global Program Instance fset_in_dec_slow: ∀ x X, Decision (x ∈ X) | 50 := λ x X,
