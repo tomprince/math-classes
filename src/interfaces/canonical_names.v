@@ -4,7 +4,7 @@ Global Set Automatic Introduction.
 Require Export
   Morphisms Setoid Program Unicode.Utf8 Utf8_core.
 
-Require Import stdlib_hints.
+Require Export stdlib_hints.
 
 (* Equality *)
 Class Equiv A := equiv: relation A.
