@@ -10,7 +10,8 @@ Section contents.
 
   Global Instance: CatId Object^op := Aid.
   Global Instance: CatComp Object^op := λ _ _ _, flip (Acomp _ _ _).
-  Global Instance e: ∀ x y: Object^op, Equiv (x ⟶ y) := λ x y, Aeq y x.
+  Global Instance e: ∀ x y: Object^op, Equiv (x ⟶ y) | 1000 := λ x y, Aeq y x.
+  Local Existing Instance e.
 
   Global Instance: ∀ (x y: Object^op), Equivalence (e x y).
   Proof. intros. change (Equivalence ((=): Equiv (A y x))). apply _. Qed.
@@ -34,8 +35,7 @@ Section contents.
   Qed.
 
 End contents.
-
-Global Hint Extern 4 (Equiv (@flipA _ _)) => class_apply @e : typeclass_instances.
+  Global Hint Cut [ !*; e; e ] : typeclass_instances.
 
 Section functors.
 
