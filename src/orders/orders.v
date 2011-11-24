@@ -21,6 +21,7 @@ Section partial_order.
   Lemma eq_iff_le x y : x = y ↔ x ≤ y ∧ y ≤ x.
   Proof. split; intros E. now rewrite E. now apply (antisymmetry (≤) x y). Qed.
 End partial_order.
+Hint Resolve @eq_le @eq_le_flip not_le_ne.
 
 Section strict_order.
   Context `{StrictSetoidOrder A}.
@@ -212,7 +213,6 @@ Section full_partial_order.
        end
      | right E1 => right _
      end.
-  Next Obligation. now apply (antisymmetry (≤)). Qed.
   Next Obligation. apply not_symmetry. now apply not_le_ne. Qed.
   Next Obligation. now apply not_le_ne. Qed.
 

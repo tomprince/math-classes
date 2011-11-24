@@ -60,10 +60,11 @@ Section cut_minus_properties.
   Proof. rewrite commutativity. now apply cut_minus_le. Qed.
 
   Lemma cut_minus_le_trans x y z : y ≤ x → z ≤ y → (x ∸ y) + (y ∸ z) = x ∸ z.
-  Proof.
-    intros. apply (right_cancellation (+) z).
-    rewrite <-associativity, !cut_minus_le; try easy.
-    now transitivity y.
+  Proof with auto; try reflexivity.
+    intros.
+    apply (right_cancellation (+) z)...
+    rewrite <-associativity.
+    rewrite !cut_minus_le...
   Qed.
   Hint Resolve cut_minus_le_trans.
 

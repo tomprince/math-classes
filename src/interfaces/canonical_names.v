@@ -346,6 +346,7 @@ Implicit Arguments cotransitive [[A] [R] [CoTransitive] [x] [y]].
 
 Class AntiSymmetric `{Ae : Equiv A} (R : relation A) : Prop := antisymmetry: ∀ x y, R x y → R y x → x = y.
 Implicit Arguments antisymmetry [[A] [Ae] [AntiSymmetric]].
+Hint Unfold AntiSymmetric.
 
 Class LeftHeteroDistribute {A B} `{Equiv C} (f : A → B → C) (g_r : B → B → B) (g : C → C → C) : Prop
   := distribute_l : ∀ a b c, f a (g_r b c) = g (f a b) (f a c).

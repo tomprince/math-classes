@@ -18,10 +18,13 @@ usual properties like Trichotomy (<) and TotalRelation (≤).
 *)
 
 Class PartialOrder `{Ae : Equiv A} (Ale : Le A) : Prop :=
-  { po_setoid : Setoid A (* Making this a subclass makes instance search slow *)
+  { po_setoid :> Setoid A (* Making this a subclass makes instance search slow *)
   ; po_proper:> Proper ((=) ==> (=) ==> iff) (≤)
   ; po_preorder:> PreOrder (≤)
   ; po_antisym:> AntiSymmetric (≤) }.
+
+Hint Extern 6 (?x = ?y) => apply po_antisym.
+Hint Extern 2 (?P _ ≤ ?P _ ↔ ?P _ ≤ ?P _) => apply po_proper.
 
 Class TotalOrder `{Ae : Equiv A} (Ale : Le A) : Prop :=
   { total_order_po :> PartialOrder (≤)

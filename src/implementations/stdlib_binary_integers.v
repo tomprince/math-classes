@@ -151,7 +151,6 @@ Program Instance Z_abs_nat: IntAbs Z nat := λ x,
   | Zpos p => inl (nat_of_P p)
   | Zneg p => inr (nat_of_P p)
   end.
-Next Obligation. reflexivity. Qed.
 Next Obligation. now rewrite <-(naturals.to_semiring_unique Z_of_nat), Znat.Z_of_nat_of_P. Qed.
 Next Obligation. now rewrite <-(naturals.to_semiring_unique Z_of_nat), Znat.Z_of_nat_of_P. Qed.
 
@@ -161,7 +160,6 @@ Program Instance Z_abs_N: IntAbs Z N := λ x,
   | Zpos p => inl (Npos p)
   | Zneg p => inr (Npos p)
   end.
-Next Obligation. reflexivity. Qed.
 Next Obligation. now rewrite <-(naturals.to_semiring_unique Z_of_N). Qed.
 Next Obligation. now rewrite <-(naturals.to_semiring_unique Z_of_N). Qed.
 

@@ -32,7 +32,6 @@ Section contents.
     intros x y z. unfold min, max, sort.
     repeat case (decide_rel _); simpl; try solve [intuition].
      intros. apply (antisymmetry (≤)); [|easy]. now transitivity y; apply le_flip.
-    intros. now apply (antisymmetry (≤)).
   Qed.
 
   Instance: Lattice A := lattice_order_lattice.
